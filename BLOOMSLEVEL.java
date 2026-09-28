@@ -69,7 +69,7 @@ class LoginFrame extends JFrame implements ActionListener {
     void connectDB() {
         try {
             Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection("jdbc:sqlite:C:/Users/HP/OneDrive/Desktop/SRMAP/Apps/javaapp.db");
+            conn = DriverManager.getConnection("jdbc:sqlite:" + System.getProperty("db.path", "javaapp.db"));
             System.out.println("Connected to DB - LoginFrame");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Database Connection Failed: " + e);

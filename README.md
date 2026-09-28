@@ -1,86 +1,37 @@
-# Bloom's Taxonomy Level Management System
+# Bloom's Taxonomy Level Manager
 
-![Java](https://img.shields.io/badge/Java-17-blue)
-![Swing](https://img.shields.io/badge/Java_Swing-GUI-orange)
-![SQLite](https://img.shields.io/badge/SQLite-Database-green)
-
-A comprehensive Java Swing application for managing Bloom's Taxonomy levels with secure user authentication, developed as part of SRM University-AP's Outcome-Based Education (OBE) implementation.
+A Java Swing desktop application for maintaining the Bloom's Taxonomy levels used in Outcome-Based Education (OBE) at SRM University AP. Faculty sign in and manage a catalogue of Bloom's levels — code, level name and description — stored in SQLite, with create, update, delete and search operations from a single form-and-table screen.
 
 ## Features
 
-- 🔒 Secure user authentication system
-- 📝 Complete CRUD operations for Bloom's Taxonomy levels:
-  - Create: Add new Bloom's levels
-  - Read: View existing levels in tabular format
-  - Update: Modify existing entries
-  - Delete: Remove unwanted records
-- 🔍 Search functionality for quick access
-- 🎨 User-friendly GUI with modern styling
-- 🗃️ SQLite database integration for persistent storage
-- 📊 Table view with zebra striping and custom styling
+- Login screen backed by a `users` table (parameterised queries)
+- Add, update, delete and search Bloom's levels by code
+- Table view of all stored levels
+- SQLite persistence through JDBC
 
-## Database Schema
+## Tech Stack
 
-The application uses two main tables:
+Java 17 · Swing · SQLite · sqlite-jdbc (`lib/sqlite-jdbc-3.49.1.0.jar`)
 
-```sql
--- User table for authentication
-CREATE TABLE users (
-    uname TEXT PRIMARY KEY,
-    pwd TEXT NOT NULL
-);
+## Project Structure
 
--- Bloom's level management table
-CREATE TABLE blooms_level (
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
-    bloom_code TEXT,
-    bloom_level TEXT,
-    bloom_description TEXT
-);
+```
+BLOOMSLEVEL.java   entry point, LoginFrame and BloomLevelFrame (package bloomslevel)
+schema.sql         database schema
+lib/               SQLite JDBC driver
+docs/              project report (PDF) and presentation (PPTX)
+```
 
-**Prerequisites**
-Java JDK 17 or later
+## Running
 
-SQLite JDBC driver (sqlite-jdbc-<version>.jar)
+```bash
+# 1. Create the database and a login
+sqlite3 javaapp.db < schema.sql
+sqlite3 javaapp.db "INSERT INTO users VALUES ('<username>', '<password>');"
 
-SQLite database file (javaapp.db)
+# 2. Compile and run (use ; instead of : as the classpath separator on Windows)
+javac -cp lib/sqlite-jdbc-3.49.1.0.jar -d out BLOOMSLEVEL.java
+java -cp out:lib/sqlite-jdbc-3.49.1.0.jar bloomslevel.BLOOMSLEVEL
+```
 
-Installation & Usage
-1.Clone the repository:
-git clone https://github.com/yourusername/blooms-level-manager.git
-cd blooms-level-manager
-2.Set up the database:
-
-Create a SQLite database file named javaapp.db
-Execute the schema provided above
-
-3.Add SQLite JDBC driver:
-Download the latest SQLite JDBC driver
-Place the JAR file in the project's lib directory
-
-4.Compile and run:
-javac -cp .;lib/sqlite-jdbc-<version>.jar BLOOMSLEVEL.java
-java -cp .;lib/sqlite-jdbc-<version>.jar bloomslevel.BLOOMSLEVEL
-
-**Project Structure**
-blooms-level-manager/
-│
-├── src/
-│   └── bloomslevel/
-│       └── BLOOMSLEVEL.java       # Main application file
-│
-├── lib/
-│   └── sqlite-jdbc-<version>.jar  # SQLite JDBC driver
-│
-├── docs/
-│   ├── java.pdf                   # Project documentation
-│   └── javaa.pptx                 # Project presentation
-│
-├── database/
-│   └── javaapp.db                 # SQLite database file
-│
-└── README.md                      # This file
-
-
-
-
+The app opens `javaapp.db` in the working directory; pass `-Ddb.path=/path/to/file.db` to use another location. Passwords are stored as plain text, so use this as a local academic tool only.
